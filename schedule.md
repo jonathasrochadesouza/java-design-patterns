@@ -72,14 +72,20 @@ O dev.to pt recebe `canonical_url` apontando para o post correspondente do Mediu
 
 Testar sem publicar nada: Actions → "Publish scheduled posts" → Run workflow → marcar "dry run". O log mostra exatamente o que seria publicado.
 
-## LinkedIn (via MCP server)
+## LinkedIn (via Playwright MCP — browser automation)
 
-O MCP server `linkedin-mcp-server` está configurado no opencode. Para publicar:
+O MCP server Playwright está configurado no opencode com perfil persistente. Para publicar:
 
-1. Ler o arquivo `linkedin/{principle}-{lang}.md`
-2. Parsear o front matter (title, publishOn, image)
-3. Chamar a tool MCP `linkedin_post_create` com o texto + imagem
-4. Para agendamento: `linkedin_schedule_create` com o datetime do `publishOn`
+**Primeira vez (setup):**
+1. O agent abre o navegador → faça login no LinkedIn manualmente
+2. A sessão é salva em `~/.playwright-profiles/linkedin`
+
+**Publicação:**
+1. Ler `linkedin/{principle}-{lang}.md`
+2. Parsear front matter (title, publishOn, image)
+3. Usar tools MCP Playwright: `browser_navigate`, `browser_click`, `browser_type`, `browser_press_key`
+4. Navegar até linkedin.com/feed/ → "Start a post" → colar texto → Post
+5. Upload da imagem via botão de mídia
 
 Ou manualmente: copiar o texto do arquivo, baixar a imagem, colar no LinkedIn e agendar nativamente.
 
@@ -91,13 +97,19 @@ Ou manualmente: copiar o texto do arquivo, baixar a imagem, colar no LinkedIn e 
 - ISP: https://raw.githubusercontent.com/jonathasrochadesouza/java-design-patterns/main/assets/diagrams/solid-isp.png
 - DIP: https://raw.githubusercontent.com/jonathasrochadesouza/java-design-patterns/main/assets/diagrams/solid-dip.png
 
-## Medium (via MCP server)
+## Medium (via Playwright MCP — browser automation)
 
-O MCP server `mcp-medium` está configurado no opencode. Para publicar:
+O MCP server Playwright está configurado no opencode com perfil persistente. Para publicar:
 
-1. Ler o arquivo `medium/{principle}-{lang}.md`
-2. Parsear o front matter (title, tags, canonicalUrl) + body (markdown)
-3. Chamar a tool MCP `publish_post` com title, content, tags, publishStatus
+**Primeira vez (setup):**
+1. O agent abre o navegador → faça login no Medium manualmente
+2. A sessão é salva em `~/.playwright-profiles/medium`
+
+**Publicação:**
+1. Ler `medium/{principle}-{lang}.md`
+2. Parsear front matter (title, tags, canonicalUrl) + body (markdown)
+3. Usar tools MCP Playwright: `browser_navigate`, `browser_type`, `browser_paste`
+4. Navegar até medium.com/new-story → colar título → colar conteúdo → adicionar tags → publicar
 
 Ou manualmente: copiar o markdown, colar no editor do Medium e publicar.
 

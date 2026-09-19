@@ -44,28 +44,37 @@
 
 ### MCP Servers (opencode)
 
-Dois MCP servers estão configurados em `~/.config/opencode/opencode.jsonc`:
+Dois MCP servers Playwright estão configurados em `~/.config/opencode/opencode.jsonc`:
 
-- **linkedin** — `linkedin-mcp-server` (npx). Publica e agenda posts no LinkedIn via API oficial.
-- **medium** — `mcp-medium` (npx). Publica artigos no Medium via integration token.
+- **linkedin** — `@playwright/mcp` com perfil persistente em `~/.playwright-profiles/linkedin`
+- **medium** — `@playwright/mcp` com perfil persistente em `~/.playwright-profiles/medium`
 
-Credenciais ficam em `.env` (nunca commitado). Copie `.env.example` para `.env` e preencha.
+**Setup inicial (uma única vez):**
+1. Na primeira vez que o agent tentar publicar, o navegador abre para login manual
+2. Faça login no LinkedIn/Medium normalmente (2FA, captcha, etc.)
+3. A sessão é salva no perfil persistente — não precisa logar de novo
 
 ### Fluxo de publicação
 
-**LinkedIn** (via MCP):
+**LinkedIn** (via Playwright MCP — browser automation):
 - Ler `linkedin/{principle}-{lang}.md`
 - Parsear front matter (title, publishOn, image)
-- Chamar tool `linkedin_post_create` com texto + imagem
-- Para agendamento: usar `linkedin_schedule_create` com datetime
+- `browser_navigate` → linkedin.com/feed/
+- `browser_click` → "Start a post"
+- `browser_type` → texto do post
+- `browser_click` → "Post"
+- Upload da imagem via `browser_click` no botão de mídia
 
-**Medium** (via MCP):
+**Medium** (via Playwright MCP — browser automation):
 - Ler `medium/{principle}-{lang}.md`
 - Parsear front matter (title, tags, canonicalUrl) + body (markdown)
-- Chamar tool `publish_post` com title, content, tags, publishStatus
+- `browser_navigate` → medium.com/new-story
+- `browser_type` → título
+- `browser_paste` → conteúdo markdown
+- Adicionar tags e publicar
 
 **dev.to** (via GitHub Actions):
-- Workflow `.github/workflows/publish-posts.yml` roda diariamente (13:00/14:00 UTC)
+- Workflow `.github/workflows/publish-posts.yml` roda diariamente (14:00 UTC)
 - Script `scripts/publish-posts.mjs` publica via Forem API
 - Secrets: `DEVTO_API_KEY` em GitHub Actions
 
