@@ -4,8 +4,8 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const DRY_RUN = process.argv.includes('--dry-run');
+const DEVTO_ONLY = process.argv.includes('--devto-only');
 const NOW = new Date();
-const BR_TIMEZONE = 'America/Sao_Paulo';
 
 function log(emoji, msg) { console.log(`${emoji} ${msg}`); }
 
@@ -33,43 +33,6 @@ function updateFrontMatterField(content, key, value) {
     new RegExp(`^${key}:.*$`, 'm'),
     `${key}: "${value}"`
   );
-}
-
-async function publishMedium(post, filePath) {
-  const token = process.env.MEDIUM_TOKEN;
-  if (!token) { log('❌', 'MEDIUM_TOKEN not set'); return false; }
-
-  const userIdRes = await fetch('https://api.medium.com/v1/me', {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  if (!userIdRes.ok) { log('❌', `Medium auth failed: ${userIdRes.status}`); return false; }
-  const { data: { id: userId } } = await userIdRes.json();
-
-  const tags = Array.isArray(post.meta.tags) ? post.meta.tags : [];
-  const res = await fetch(`https://api.medium.com/v1/users/${userId}/posts`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      title: post.meta.title,
-      contentFormat: 'markdown',
-      content: post.body,
-      tags: tags.slice(0, 5),
-      publishStatus: 'public',
-      canonicalUrl: post.meta.canonicalUrl || undefined
-    })
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    log('❌', `Medium publish failed: ${res.status} ${err}`);
-    return false;
-  }
-  const { data } = await res.json();
-  log('✅', `Medium published: ${data.url}`);
-  return data.url;
 }
 
 async function publishDevTo(post, filePath, mediumUrl) {
@@ -116,11 +79,12 @@ function savePublishState(state) {
 }
 
 async function main() {
-  log('🚀', `Publish runner started at ${NOW.toISOString()} (dry run: ${DRY_RUN})`);
+  log('🚀', `Publish runner started at ${NOW.toISOString()} (dry run: ${DRY_RUN}, devto only: ${DEVTO_ONLY})`);
   const state = loadPublishState();
   const results = [];
+  const dirs = DEVTO_ONLY ? ['dev-to'] : ['dev-to'];
 
-  for (const dir of ['medium', 'dev-to']) {
+  for (const dir of dirs) {
     const fullDir = join(process.cwd(), dir);
     if (!existsSync(fullDir)) continue;
     const files = readdirSync(fullDir).filter(f => f.endsWith('.md'));
@@ -152,16 +116,14 @@ async function main() {
       if (DRY_RUN) {
         log('🔍', `[DRY RUN] Would publish ${file}`);
         url = `dry-run-${file}`;
-      } else if (dir === 'medium') {
-        url = await publishMedium({ meta, body }, filePath);
-      } else if (dir === 'dev-to') {
+      } else {
         const mediumPrinciple = `medium-pt-${meta.principle}`;
         const mediumUrl = state[mediumPrinciple]?.url || '';
         url = await publishDevTo({ meta, body }, filePath, mediumUrl);
       }
 
       if (url) {
-        state[`${dir === 'medium' ? 'medium' : 'devto'}-${meta.language === 'pt-BR' ? 'pt' : 'en'}-${meta.principle}`] = {
+        state[`devto-pt-${meta.principle}`] = {
           url,
           publishedAt: NOW.toISOString()
         };

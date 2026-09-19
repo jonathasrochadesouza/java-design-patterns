@@ -72,15 +72,16 @@ O dev.to pt recebe `canonical_url` apontando para o post correspondente do Mediu
 
 Testar sem publicar nada: Actions → "Publish scheduled posts" → Run workflow → marcar "dry run". O log mostra exatamente o que seria publicado.
 
-Se a API do Medium recusar o token (a plataforma às vezes restringe integrações novas), o fallback é colar o markdown manualmente no editor do Medium — os arquivos estão prontos para isso.
+## LinkedIn (via MCP server)
 
-## LinkedIn (manual — não existe API pública para perfis pessoais)
+O MCP server `linkedin-mcp-server` está configurado no opencode. Para publicar:
 
-Para cada post em `linkedin/`:
+1. Ler o arquivo `linkedin/{principle}-{lang}.md`
+2. Parsear o front matter (title, publishOn, image)
+3. Chamar a tool MCP `linkedin_post_create` com o texto + imagem
+4. Para agendamento: `linkedin_schedule_create` com o datetime do `publishOn`
 
-1. Abrir o arquivo e copiar o texto abaixo do front matter.
-2. Baixar/anexar a imagem indicada no campo `image:` (URLs abaixo).
-3. Colar, anexar e publicar no horário da tabela. O LinkedIn também permite agendar nativamente (ícone de relógio ao criar o post).
+Ou manualmente: copiar o texto do arquivo, baixar a imagem, colar no LinkedIn e agendar nativamente.
 
 ### Imagens (PNG dos diagramas Excalidraw, hospedadas no GitHub)
 
@@ -89,6 +90,16 @@ Para cada post em `linkedin/`:
 - LSP: https://raw.githubusercontent.com/jonathasrochadesouza/java-design-patterns/main/assets/diagrams/solid-lsp.png
 - ISP: https://raw.githubusercontent.com/jonathasrochadesouza/java-design-patterns/main/assets/diagrams/solid-isp.png
 - DIP: https://raw.githubusercontent.com/jonathasrochadesouza/java-design-patterns/main/assets/diagrams/solid-dip.png
+
+## Medium (via MCP server)
+
+O MCP server `mcp-medium` está configurado no opencode. Para publicar:
+
+1. Ler o arquivo `medium/{principle}-{lang}.md`
+2. Parsear o front matter (title, tags, canonicalUrl) + body (markdown)
+3. Chamar a tool MCP `publish_post` com title, content, tags, publishStatus
+
+Ou manualmente: copiar o markdown, colar no editor do Medium e publicar.
 
 ## Estrutura de cada pasta
 

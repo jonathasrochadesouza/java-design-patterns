@@ -39,3 +39,36 @@
 -> agents/instructions/
 
 ## Infrastructure Safety
+
+## Social Media Publishing (SOLID Series)
+
+### MCP Servers (opencode)
+
+Dois MCP servers estão configurados em `~/.config/opencode/opencode.jsonc`:
+
+- **linkedin** — `linkedin-mcp-server` (npx). Publica e agenda posts no LinkedIn via API oficial.
+- **medium** — `mcp-medium` (npx). Publica artigos no Medium via integration token.
+
+Credenciais ficam em `.env` (nunca commitado). Copie `.env.example` para `.env` e preencha.
+
+### Fluxo de publicação
+
+**LinkedIn** (via MCP):
+- Ler `linkedin/{principle}-{lang}.md`
+- Parsear front matter (title, publishOn, image)
+- Chamar tool `linkedin_post_create` com texto + imagem
+- Para agendamento: usar `linkedin_schedule_create` com datetime
+
+**Medium** (via MCP):
+- Ler `medium/{principle}-{lang}.md`
+- Parsear front matter (title, tags, canonicalUrl) + body (markdown)
+- Chamar tool `publish_post` com title, content, tags, publishStatus
+
+**dev.to** (via GitHub Actions):
+- Workflow `.github/workflows/publish-posts.yml` roda diariamente (13:00/14:00 UTC)
+- Script `scripts/publish-posts.mjs` publica via Forem API
+- Secrets: `DEVTO_API_KEY` em GitHub Actions
+
+### Calendário
+
+Ver `schedule.md` — Outubro/2026, 25 posts, 1 princípio por semana.

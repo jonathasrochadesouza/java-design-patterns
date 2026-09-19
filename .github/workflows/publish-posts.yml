@@ -1,8 +1,8 @@
-name: Publish scheduled posts
+name: Publish dev.to posts
 
 on:
   schedule:
-    - cron: "0 13,14 * * *"
+    - cron: "0 14 * * *"
   workflow_dispatch:
     inputs:
       dry_run:
@@ -25,15 +25,14 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Run publish script
+      - name: Run publish script (dev.to only)
         env:
-          MEDIUM_TOKEN: ${{ secrets.MEDIUM_TOKEN }}
           DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
-            node scripts/publish-posts.mjs --dry-run
+            node scripts/publish-posts.mjs --dry-run --devto-only
           else
-            node scripts/publish-posts.mjs
+            node scripts/publish-posts.mjs --devto-only
           fi
 
       - name: Commit changes
@@ -41,6 +40,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add medium/ dev-to/ .publish-state.json
-          git diff --cached --quiet || git commit -m "chore: update published post status and state"
+          git add dev-to/ .publish-state.json
+          git diff --cached --quiet || git commit -m "chore: update dev.to published post status"
           git push origin main
