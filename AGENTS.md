@@ -62,16 +62,19 @@ Dois MCP servers Playwright estão configurados em `~/.config/opencode/opencode.
 - `browser_navigate` → linkedin.com/feed/
 - `browser_click` → "Start a post"
 - `browser_type` → texto do post
-- `browser_click` → "Post"
 - Upload da imagem via `browser_click` no botão de mídia
+- **AGENDAMENTO**: Após digitar o post, clicar no ícone de relógio (Schedule), selecionar data/hora do `publishOn`, e confirmar agendamento
+- **NÃO clicar em "Post"** — o post deve ser AGENDADO, não publicado imediatamente
 
 **Medium** (via Playwright MCP — browser automation):
 - Ler `medium/{principle}-{lang}.md`
 - Parsear front matter (title, tags, canonicalUrl) + body (markdown)
 - `browser_navigate` → medium.com/new-story
 - `browser_type` → título
-- `browser_paste` → conteúdo markdown
-- Adicionar tags e publicar
+- `browser_paste` → conteúdo markdown (usar `browser_evaluate` com `document.execCommand('insertText', ...)` para rich text)
+- Adicionar tags
+- **AGENDAMENTO**: Clicar em "Schedule story", selecionar data/hora do `publishOn`, e confirmar
+- **NÃO clicar em "Publish now"** — o artigo deve ser AGENDADO, não publicado imediatamente
 
 **dev.to** (via GitHub Actions):
 - Workflow `.github/workflows/publish-posts.yml` roda diariamente (14:00 UTC)

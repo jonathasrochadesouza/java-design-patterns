@@ -84,8 +84,9 @@ O MCP server Playwright está configurado no opencode com perfil persistente. Pa
 1. Ler `linkedin/{principle}-{lang}.md`
 2. Parsear front matter (title, publishOn, image)
 3. Usar tools MCP Playwright: `browser_navigate`, `browser_click`, `browser_type`, `browser_press_key`
-4. Navegar até linkedin.com/feed/ → "Start a post" → colar texto → Post
-5. Upload da imagem via botão de mídia
+4. Navegar até linkedin.com/feed/ → "Start a post" → colar texto → Upload da imagem
+5. **AGENDAMENTO**: Clicar no ícone de relógio (Schedule), selecionar data/hora do `publishOn`, confirmar
+6. **NÃO clicar em "Post"** — o post deve ser AGENDADO
 
 Ou manualmente: copiar o texto do arquivo, baixar a imagem, colar no LinkedIn e agendar nativamente.
 
@@ -109,7 +110,9 @@ O MCP server Playwright está configurado no opencode com perfil persistente. Pa
 1. Ler `medium/{principle}-{lang}.md`
 2. Parsear front matter (title, tags, canonicalUrl) + body (markdown)
 3. Usar tools MCP Playwright: `browser_navigate`, `browser_type`, `browser_paste`
-4. Navegar até medium.com/new-story → colar título → colar conteúdo → adicionar tags → publicar
+4. Navegar até medium.com/new-story → colar título → colar conteúdo → adicionar tags
+5. **AGENDAMENTO**: Clicar em "Schedule story", selecionar data/hora do `publishOn`, confirmar
+6. **NÃO clicar em "Publish now"** — o artigo deve ser AGENDADO
 
 Ou manualmente: copiar o markdown, colar no editor do Medium e publicar.
 

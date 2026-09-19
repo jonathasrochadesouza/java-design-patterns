@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "linkedin": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest", "--user-data-dir", "~/.playwright-profiles/linkedin"],
+      "env": {}
+    },
+    "medium": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest", "--user-data-dir", "~/.playwright-profiles/medium"],
+      "env": {}
+    }
+  }
+}
