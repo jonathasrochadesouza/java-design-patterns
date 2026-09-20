@@ -43,3 +43,18 @@ jobs:
           git add dev-to/ .publish-state.json
           git diff --cached --quiet || git commit -m "chore: update dev.to published post status"
           git push origin main
+
+      - name: Disable workflow if all posts published
+        if: inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TOTAL=$(ls dev-to/*.md | wc -l)
+          PUBLISHED=$(grep -l 'status: "published"' dev-to/*.md | wc -l)
+          echo "Published: $PUBLISHED / $TOTAL"
+          if [ "$PUBLISHED" -eq "$TOTAL" ]; then
+            echo "All posts published. Disabling workflow..."
+            gh workflow disable "Publish dev.to posts"
+          else
+            echo "$((TOTAL - PUBLISHED)) post(s) remaining. Workflow stays active."
+          fi
