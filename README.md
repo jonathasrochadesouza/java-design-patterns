@@ -32,6 +32,8 @@ High-level modules should not depend on low-level modules. Both should depend on
 
 ![DIP — Depend on abstractions](assets/diagrams/solid-dip.png)
 
+> **Tip:** Open the `.excalidraw` files in [`engineering/`](engineering/) with [Excalidraw](https://excalidraw.com) or install the [Excalidraw VS Code extension](https://marketplace.visualstudio.com/items?itemName=excalidraw.excalidraw) to view and edit the diagrams interactively.
+
 ## Requisitos
 
 - JDK 25 (LTS) — [`C:\Dev\Bins\Java\jdk-25.0.4.1`](C:\Dev\Bins\Java\jdk-25.0.4.1)
