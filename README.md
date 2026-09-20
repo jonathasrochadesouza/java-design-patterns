@@ -6,20 +6,31 @@ Java design patterns
 Diagrams illustrating each SOLID principle with Java examples. Source files in [`engineering/`](engineering/) (Excalidraw).
 
 <!-- Imagens dos diagramas — adicione abaixo -->
+
+### SRP — Single Responsibility Principle
+A class should have only one reason to change. Here, an `Invoice` that calculates totals, persists to DB, and sends emails is split into focused classes: `InvoiceCalculator`, `InvoiceRepository`, and `InvoiceSender`.
+
 ![SRP — One class, one job](assets/diagrams/solid-srp.png)
-<!-- SRP: Invoice que faz tudo vs. classes separadas por responsabilidade -->
+
+### OCP — Open/Closed Principle
+Software entities should be open for extension but closed for modification. A `PaymentProcessor` accepts new payment methods (Pix, boleto, card) via strategy pattern — no existing code is touched.
 
 ![OCP — Extend without modifying](assets/diagrams/solid-ocp.png)
-<!-- OCP: PaymentProcessor com strategy pattern para Pix, boleto, cartão -->
+
+### LSP — Liskov Substitution Principle
+Subtypes must be substitutable for their base types without breaking behavior. An `InvestmentAccount` extends `Account` but cannot withdraw — violating LSP and causing unexpected errors at runtime.
 
 ![LSP — Subtypes must be substitutable](assets/diagrams/solid-lsp.png)
-<!-- LSP: Contas bancárias — InvestmentAccount que não pode sacar -->
+
+### ISP — Interface Segregation Principle
+Clients should not be forced to depend on methods they do not use. A bloated `Printer` interface with `scan()`, `fax()`, and `print()` is split into `Scannable`, `Faxable`, and `Printable`.
 
 ![ISP — No fat interfaces](assets/diagrams/solid-isp.png)
-<!-- ISP: Impressora com interface inflada vs. interfaces segregadas -->
+
+### DIP — Dependency Inversion Principle
+High-level modules should not depend on low-level modules. Both should depend on abstractions. `OrderService` depends on a `Repository` interface, not on a concrete MySQL implementation.
 
 ![DIP — Depend on abstractions](assets/diagrams/solid-dip.png)
-<!-- DIP: OrderService depende de repository abstrato, não de implementação concreta -->
 
 ## Requisitos
 
