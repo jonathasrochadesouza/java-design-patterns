@@ -57,6 +57,20 @@ mvn package
 java -cp target\classes com.jonathas.HelloWorld
 ```
 
+## Build by specific java version on macOS!
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 25)
+export PATH="$JAVA_HOME/bin:$PATH"
+
+java --version
+
+mvn package
+java -cp target/classes com.jonathas.HelloWorld
+```
+
+> Pré-requisito: JDK 25 instalado (ex.: [Temurin](https://adoptium.net) — instala em `/Library/Java/JavaVirtualMachines/temurin-25.jdk`). Liste as versões disponíveis com `/usr/libexec/java_home -V`.
+
 ## SOLID Content
 
 ### Single-Responsibility Principle (SRP)
