@@ -71,6 +71,21 @@ java -cp target/classes com.jonathas.HelloWorld
 
 > Pré-requisito: JDK 25 instalado (ex.: [Temurin](https://adoptium.net) — instala em `/Library/Java/JavaVirtualMachines/temurin-25.jdk`). Liste as versões disponíveis com `/usr/libexec/java_home -V`.
 
+> O projeto usa [Maven Toolchains](https://maven.apache.org/plugins/maven-toolchains-plugin/): o JDK 25 precisa estar registrado em `~/.m2/toolchains.xml` (exemplo com todas as versões instaladas):
+>
+> ```xml
+> <?xml version="1.0" encoding="UTF-8"?>
+> <toolchains>
+>   <toolchain>
+>     <type>jdk</type>
+>     <provides><version>25</version><vendor>temurin</vendor></provides>
+>     <configuration>
+>       <jdkHome>/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home</jdkHome>
+>     </configuration>
+>   </toolchain>
+> </toolchains>
+> ```
+
 ## SOLID Content
 
 ### Single-Responsibility Principle (SRP)
