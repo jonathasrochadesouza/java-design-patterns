@@ -90,6 +90,17 @@ java -cp target/classes com.jonathas.HelloWorld
 
 ### Single-Responsibility Principle (SRP)
 
+`com.jonathas.srp.SRP_Incorrect` — ❌ all responsibilities (creation, persistence, PDF generation, email sending) crammed into a single class.
+
+Run it (macOS/Linux):
+
+```bash
+java -cp target/classes com.jonathas.srp.SRP_Incorrect
+java -cp target/classes com.jonathas.srp.SRP_Correct
+```
+
+`com.jonathas.srp.SRP_Correct` — ✅ responsibilities split across focused classes (`InvoiceService`, `InvoiceRepository`, `GeneratePdf`, `SendInvoice`).
+
 `com.jonathas.HelloWorld`
 
 ### Open/Closed Principle (OCP)

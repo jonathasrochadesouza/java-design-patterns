@@ -3,8 +3,12 @@ package com.jonathas.srp;
 import java.math.BigDecimal;
 import java.util.List;
 
-/** Execute com: javac ExemploSRP.java && java ExemploSRP */
-public class SRP {
+/**
+ * Correct implementation of the Single Responsibility Principle (SRP) ✅
+ *
+ * Each class has a single responsibility, making the code easier to maintain and extend.
+ */
+public class SRP_Correct {
     public static void main(String[] args) {
         InvoiceRepository repository = new InvoiceRepository();
         GeneratePdf pdfGenerator = new GeneratePdf();
@@ -12,24 +16,28 @@ public class SRP {
         InvoiceService service = new InvoiceService(repository, pdfGenerator, sender);
 
         Invoice invoice = service.create(
-                "Cliente Exemplo",
-                List.of(new InvoiceItem("Consultoria", 2, new BigDecimal("150.00"))));
+            "Jonathas Rocha de Souza",
+            List.of(
+                new InvoiceItem("Headphone Logitech PRO - Version League of Legends", 1, new BigDecimal("750.00")),
+                new InvoiceItem("Keyboard Razer Chroma", 2, new BigDecimal("550.00"))
+            )
+        );
 
         repository.save(invoice);
         byte[] pdf = pdfGenerator.generate(invoice);
-        sender.sendByEmail(invoice, pdf, "cliente@example.com");
+        sender.sendByEmail(invoice, pdf, "jonathas@client.com");
     }
 }
 
-// Invoice representa os dados e regras da fatura, não sua persistência ou envio.
+// Invoice record - represents the data and rules of the invoice, not its persistence or sending.
 record Invoice(String customer, List<InvoiceItem> items) {
     Invoice {
         if (customer == null || customer.isBlank()) {
-            throw new IllegalArgumentException("Cliente é obrigatório");
+            throw new IllegalArgumentException("Client is required");
         }
         items = List.copyOf(items);
         if (items.isEmpty()) {
-            throw new IllegalArgumentException("A fatura precisa de pelo menos um item");
+            throw new IllegalArgumentException("Invoice needs at least one item");
         }
     }
 
@@ -44,16 +52,16 @@ record InvoiceItem(String description, int quantity, BigDecimal unitPrice) {
     InvoiceItem {
         if (description == null || description.isBlank() || quantity <= 0
                 || unitPrice == null || unitPrice.signum() < 0) {
-            throw new IllegalArgumentException("Item inválido");
+            throw new IllegalArgumentException("Invalid item");
         }
     }
 }
 
-// Responsabilidade: criar uma fatura válida.
+// Responsibility: create a valid invoice.
 class InvoiceService {
     InvoiceService(InvoiceRepository repository, GeneratePdf pdfGenerator, SendInvoice sender) {
-        // Para manter o exemplo próximo do diagrama, as outras ações ficam
-        // nas classes especializadas. Veja a variante orquestradora abaixo.
+        // To keep the example close to the diagram, the other actions remain in the specialized classes.
+        // See the orchestration variant below.
     }
 
     Invoice create(String customer, List<InvoiceItem> items) {
@@ -61,29 +69,29 @@ class InvoiceService {
     }
 }
 
-// Responsabilidade: persistir. Aqui há apenas uma simulação.
+// Responsibility: persist. This is only a simulation.
 class InvoiceRepository {
     void save(Invoice invoice) {
-        System.out.println("Fatura salva: " + invoice.customer() + " | Total: " + invoice.total());
+        System.out.println("Invoice saved: " + invoice.customer() + " | Total: " + invoice.total());
     }
 }
 
-// Responsabilidade: gerar documento. Substitua pela biblioteca de PDF real.
+// Responsibility: generate document. Replace this with a real PDF library.
 class GeneratePdf {
     byte[] generate(Invoice invoice) {
-        String content = "Fatura de " + invoice.customer() + " | Total: " + invoice.total();
-        System.out.println("Documento gerado (simulação): " + content);
+        String content = "Invoice for " + invoice.customer() + " | Total: " + invoice.total();
+        System.out.println("Document generated (simulation): " + content);
         return content.getBytes(java.nio.charset.StandardCharsets.UTF_8);
     }
 }
 
-// Responsabilidade: enviar e-mail. Substitua por um provedor de e-mail real.
+// Responsibility: send email. Replace this with a real email provider.
 class SendInvoice {
     void sendByEmail(Invoice invoice, byte[] pdf, String recipient) {
         if (recipient == null || recipient.isBlank()) {
-            throw new IllegalArgumentException("Destinatário é obrigatório");
+            throw new IllegalArgumentException("Recipient is required");
         }
-        System.out.println("Enviando fatura de " + invoice.customer() + " para " + recipient
-                + " (anexo simulado com " + pdf.length + " bytes)");
+        System.out.println("Sending invoice for " + invoice.customer() + " to " + recipient
+                + " (simulated attachment with " + pdf.length + " bytes)");
     }
 }
