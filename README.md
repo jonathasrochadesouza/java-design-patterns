@@ -120,7 +120,16 @@ java -cp target/classes com.jonathas.ocp.OCP_Correct
 
 ### Liskov Substitution Principle (LSP)
 
-`com.jonathas.HelloWorld`
+`com.jonathas.lsp.LSP_Incorrect` — ❌ the base `Account` promises `getBalance()` **and** `withdraw()`, but `InvestmentAccount` cannot honor `withdraw()` — its override throws at runtime; clients holding an `Account` blow up (the classic substitutability break).
+
+Run it (macOS/Linux):
+
+```bash
+java -cp target/classes com.jonathas.lsp.LSP_Incorrect
+java -cp target/classes com.jonathas.lsp.LSP_Correct
+```
+
+`com.jonathas.lsp.LSP_Correct` — ✅ `Account` offers only `getBalance()`; withdrawals live in a narrower `WithdrawableAccount extends Account`. `InvestmentAccount` implements only `Account`, `CheckingAccount` implements `WithdrawableAccount` (matches `engineering/lsp.excalidraw`).
 
 ### Interface Segregation Principle (ISP)
 
