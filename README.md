@@ -105,6 +105,17 @@ java -cp target/classes com.jonathas.srp.SRP_Correct
 
 ### Open/Closed Principle (OCP)
 
+`com.jonathas.ocp.OCP_Incorrect` — ❌ `PaymentProcessor` hardcodes every payment type in a switch; adding a new payment method (e.g., BankSlips) forces modifying the class.
+
+Run it (macOS/Linux):
+
+```bash
+java -cp target/classes com.jonathas.ocp.OCP_Incorrect
+java -cp target/classes com.jonathas.ocp.OCP_Correct
+```
+
+`com.jonathas.ocp.OCP_Correct` — ✅ `PaymentProcessor` depends on the `PaymentMethod` abstraction; new payment methods are added as new implementations (`CreditCardPayment`, `PixPayment`, `PayPalPayment`, `BankSlipsPayment`) without touching existing code.
+
 `com.jonathas.HelloWorld`
 
 ### Liskov Substitution Principle (LSP)
