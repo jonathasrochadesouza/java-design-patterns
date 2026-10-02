@@ -23,12 +23,12 @@ Subtypes must be substitutable for their base types without breaking behavior. A
 ![LSP — Subtypes must be substitutable](assets/diagrams/solid-lsp.png)
 
 ### ISP — Interface Segregation Principle
-Clients should not be forced to depend on methods they do not use. A bloated `Printer` interface with `scan()`, `fax()`, and `print()` is split into `Scannable`, `Faxable`, and `Printable`.
+Clients should not be forced to depend on methods they do not use. Printer capability is segregated into role interfaces — `Printer`, `Scanner`, and `FaxMachine`; `BasicPrinter` implements only `Printer`, while `MultifunctionPrinter` implements all three.
 
 ![ISP — No fat interfaces](assets/diagrams/solid-isp.png)
 
 ### DIP — Dependency Inversion Principle
-High-level modules should not depend on low-level modules. Both should depend on abstractions. `OrderService` depends on a `Repository` interface, not on a concrete MySQL implementation.
+High-level modules should not depend on low-level modules — both should depend on abstractions. `OrderService` depends on the `EmailSender` interface, and the concrete `SmtpEmailSender` is injected from outside.
 
 ![DIP — Depend on abstractions](assets/diagrams/solid-dip.png)
 
@@ -133,8 +133,26 @@ java -cp target/classes com.jonathas.lsp.LSP_Correct
 
 ### Interface Segregation Principle (ISP)
 
-`com.jonathas.HelloWorld`
+`com.jonathas.isp.ISP_Incorrect` — ❌ one fat `Printer` contract bundles `print`, `scan`, and `fax`; `BasicPrinter` only prints but is forced to implement `scan()`/`fax()` with bodies that just throw.
+
+Run it (macOS/Linux):
+
+```bash
+java -cp target/classes com.jonathas.isp.ISP_Incorrect
+java -cp target/classes com.jonathas.isp.ISP_Correct
+```
+
+`com.jonathas.isp.ISP_Correct` — ✅ each capability lives in its own role interface (`Printer`, `Scanner`, `FaxMachine`). `BasicPrinter` implements only `Printer`, `MultifunctionPrinter` implements all three — no empty/throwing stubs anywhere (matches `engineering/isp.excalidraw`).
 
 ### Dependency Inversion Principle (DIP)
 
-`com.jonathas.HelloWorld`
+`com.jonathas.dip.DIP_Incorrect` — ❌ the high-level `OrderService` constructs the concrete `SmtpEmailSender` itself; there is no seam to swap the transport or inject a test fake.
+
+Run it (macOS/Linux):
+
+```bash
+java -cp target/classes com.jonathas.dip.DIP_Incorrect
+java -cp target/classes com.jonathas.dip.DIP_Correct
+```
+
+`com.jonathas.dip.DIP_Correct` — ✅ `OrderService` depends only on the `EmailSender` abstraction and receives it via constructor injection; concrete senders (`SmtpEmailSender`, and any new detail added later) are wired from outside (matches `engineering/dip.excalidraw`).
