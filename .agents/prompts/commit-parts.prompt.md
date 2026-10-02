@@ -1,0 +1,1 @@
+Quero que você va fazendo commit de tudo que eu tenho, porém aos poucos e colocando arquivos por contextos (dos menores possíveis) seguindo boas praticas, e fazendo varios commits com as mensagens apropriadas usando a skill ''agents/skills/committing-changes'', até commitar tudo!
