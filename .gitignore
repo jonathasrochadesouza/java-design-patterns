@@ -30,3 +30,7 @@ replay_pid*
 # Environment variables (MCP server credentials)
 .env
 .env.local
+
+# Code Review and IDE files
+.agents/skills/revai
+.revai/
