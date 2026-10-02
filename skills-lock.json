@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "revai": {
+      "source": "jonathasrochadesouza/revai",
+      "sourceType": "github",
+      "skillPath": "skills/revai/SKILL.md",
+      "computedHash": "5e33f1dfbc586b761079b8d1c75951fe2843e9a76ce30aebfe94992e3a396d6b"
+    }
+  }
+}
